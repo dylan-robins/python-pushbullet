@@ -73,10 +73,10 @@ class Handler:
         """Handles the options given to the 'post' subparser"""
 
         # find the iden str of the specified device:
-        iden = None
+        device_iden = None
         if args.device is not None:
             try:
-                device = next(
+                device_iden = next(
                     filter(
                         lambda device: device.nickname == args.device,
                         PushbulletDevices.get_device_list(),
@@ -87,7 +87,7 @@ class Handler:
                 PushbulletDevices.print_device_list()
                 exit(1)
 
-        PushbulletPushes.post_note(device, args.title, args.body)
+        PushbulletPushes.post_note(device_iden, args.title, args.body)
 
     @staticmethod
     def devices_handler(args: argparse.Namespace):

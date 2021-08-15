@@ -15,7 +15,7 @@ PUSHBULLET_API_KEY = getenv("PUSHBULLET_API_KEY")
 class Device:
     """Class representing a device"""
 
-    def __init__(self, device_info: dict[str, Any]):
+    def __init__(self, device_info: Dict[str, Any]):
         self.info = device_info
 
     def __getattr__(self, key):
@@ -27,7 +27,7 @@ class Device:
 
 class PushbulletDevices:
     @staticmethod
-    def get_device_list() -> list[dict[str, Any]]:
+    def get_device_list() -> List[Dict[str, Any]]:
         """Returns the list of devices attached to the user's account"""
 
         headers = {"Access-Token": PUSHBULLET_API_KEY}
@@ -94,35 +94,3 @@ class Handler:
         """Handles the options given to the 'devices' subparser"""
 
         PushbulletDevices.print_device_list()
-
-
-def main() -> None:
-    # define parsers
-    parser = argparse.ArgumentParser()
-    subparsers = parser.add_subparsers()
-    subparsers.required = True
-
-    post_parser = subparsers.add_parser("post", help="Posts a notification")
-    post_parser.add_argument(
-        "-t", "--title", help="Title of the notificatiton", type=str, required=True
-    )
-    post_parser.add_argument(
-        "-b", "--body", help="Body of the notificatiton", type=str, required=True
-    )
-    post_parser.add_argument(
-        "-d", "--device", help="Name of the receiving device", type=str
-    )
-    post_parser.set_defaults(func=Handler.post_handler)
-
-    devices_parser = subparsers.add_parser(
-        "devices", help="Lists devices attached to the account"
-    )
-    devices_parser.set_defaults(func=Handler.devices_handler)
-
-    # parse arguments and dispatch to subparser callbacks
-    args = parser.parse_args()
-    args.func(args)
-
-
-if __name__ == "__main__":
-    main()
